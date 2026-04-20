@@ -1,0 +1,5 @@
+openai
+chromadb
+PyMuPDF
+pydantic_settings
+pytest

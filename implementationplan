@@ -1,0 +1,43 @@
+# Production RAG Pipeline: Implementation Plan
+
+Based on the architecture described in our `README.md`, we will build this step-by-step. The goal is to build a high-quality, production-ready system rather than just a quick script, featuring strong configurations, error handling, and clear module interfaces.
+
+## Phase 1: Project Setup & Observability Foundation
+* **Environment:** Set up a clean Python virtual environment.
+* **Dependencies:** Install core libraries (`openai`, `chromadb`, PDF tools, `pydantic-settings`, `pytest`).
+* **Test Scaffold:** Set up an empty `tests/` directory with per-module files to maintain discipline early.
+* **Config Management:** Add a configuration layer (`config/settings.py`) using environment variables for the OpenAI API key, model names, chunk size, and `top_k`.
+* **Structured Logging:** Implement plain-text logging using Python's `logging`. Logs will include `run_id`, `step`, `status`, `duration`, and `metadata`. **Crucially, we will add log rotation** for production readiness.
+
+## Phase 2: Ingestion & Document Parsing (The Reader)
+* **Document Registry:** Implement a simple SQLite tracking file to record ingested PDFs, preventing accidental dual-processing of the same file.
+* **PDF Extraction:** Use `PyMuPDF` (better for layout and images) as the primary extractor, with `pdfplumber` as a fallback.
+* **Document Normalization Layer:** Before chunking:
+  * Remove noise (headers, footers).
+  * Fix broken sentences and line breaks.
+  * Unify text encoding.
+* **Specialized Routing & Tables:** Process tables by storing **BOTH** the raw table output (for factual retrieval) and the LLM-generated summary (for semantic retrieval).
+* **Intelligent Chunking:** Implement structure-aware chunking with overlap to preserve context across boundaries.
+
+## Phase 3: Embedding & Storage (The Memory)
+* **Persistence Setup:** Initialize ChromaDB with a `persist_directory="./chroma_db"` to ensure data persists across restarts.
+* **Metadata Schema:** Enforce a strict metadata schema for every chunk to enable filtering and citations. Example:
+  `{"source": "file.pdf", "page": 2, "type": "paragraph | table | image", "chunk_id": "uuid"}`
+* **Batch Embeddings:** Implement batch embedding generation with OpenAI using a strict `embedding_batch_size` limit (e.g., 100) to safely manage API rate limits.
+
+## Phase 4: Hybrid Retrieval & Reranking (The Finder)
+* **Dense Retrieval:** Perform vector similarity search against ChromaDB.
+* **Sparse Retrieval:** Use `rank_bm25` (or an elastic-style index) for exact keyword matches.
+* **Fusion Strategy:** Combine sparse and dense results using robust algorithms like **Reciprocal Rank Fusion (RRF)** or weighted scoring.
+* **Reranking:** Pass fused results through a cross-encoder (e.g., HuggingFace cross-encoder or Cohere rerank API) to sort Top-K. We will **log the before/after scores** to track the reranker's impact.
+
+## Phase 5: Generation & Citations (The Speaker)
+* **Context Assembly Strategy:** Assemble chunks ordered either by relevance score or document order to improve LLM coherence. Handle max token limits and define a clear truncation strategy.
+* **Structured Generation & Fallbacks:** Use OpenAI Function Calling (Structured Outputs) to guarantee a consistent response schema. Implement a robust **parse-and-retry / graceful degradation strategy** using `tenacity` for resilience against malformed LLM outputs.
+
+## Phase 6: Monitoring & Evaluation (The Watcher)
+* **Google Sheets Sync:** Use the Google Sheets API to store a robust run schema: `RunID | Step | Status | Latency | TopK | Score | Answer | Timestamp`.
+* **Evaluation Layer:** Split evaluation into two distinct loops:
+  1. **Retrieval Eval:** Measure `recall@k` and `MRR`.
+  2. **Generation Eval:** Measure `faithfulness` and `answer relevance`.
+* **Closed-Loop Feedback:** Tie logs to evaluation by using the logged data to replay bad queries and systematically improve chunking and retrieval strategies.
