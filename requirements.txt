@@ -3,3 +3,8 @@ chromadb
 PyMuPDF
 pydantic_settings
 pytest
+pdfplumber
+fastapi
+uvicorn
+rank_bm25
+tenacity

@@ -11,7 +11,7 @@ def get_logger(name:str):
 
     if not logger.handlers:
         formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            "%(asctime)s - %(name)s - %(levelname)s -[%(steps)s]- %(message)s"
         )
 
 #Driver -1 Terminal Handler
@@ -26,5 +26,19 @@ def get_logger(name:str):
         logger.addHandler(file_handler)
 
     return logger
+
+class CustomLoggerAdapter(logging.LoggerAdapter):
+    def process(self,msg,kwargs):
+        extra = self.extra.copy() if self.extra else{}
+        extra.update(kwargs.get("extra",{}))
+        
+        if 'step' not in extra:
+            extra['step'] = 'system'
+        kwargs['extra'] = extra
+        return msg, kwargs
+
+    def get_structured_logger(name:str):
+        logger = get_logger(name)
+        return CustomLoggerAdapter(logger,{})
     
      
