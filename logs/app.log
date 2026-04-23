@@ -45,3 +45,40 @@
 - Autonomous Agents, Multi-Agent Orchestration, Prompt Engineering, Hallucination Mitigation, RAG Architecture
 - OpenAI API, Anthropic Claude, LangChain, Vector Embeddings, Semantic Search, Context Window Optimisation
 - Vector Databases: ChromaDB, Pinecone, M...
+2026-04-24 03:16:22,716 - app.pipeline.query_pipeline - INFO -[query]- Received question: why Holy cross used here
+2026-04-24 03:16:26,229 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 0 results for query
+2026-04-24 03:16:26,230 - app.pipeline.query_pipeline - INFO -[query]- Found 0 relevant chunks
+2026-04-24 03:16:28,690 - app.pipeline.query_pipeline - INFO -[query]- Answer: The question seems to reference the use of "Holy Cross" in a specific context. Without specific text or details from your context, it's difficult to determine the exact reason why "Holy Cross" is used. "Holy Cross" could refer to a religious symbol, a location such as a church or school, or it might...
+2026-04-24 03:23:06,858 - app.pipeline.query_pipeline - INFO -[query]- Received question: why Holy cross used here
+2026-04-24 03:23:09,275 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 0 results for query
+2026-04-24 03:23:09,276 - app.retrieval.rrf_fusion - INFO -[retrieval]- Fused 0 dense and 0 sparse results into 0 top hits
+2026-04-24 03:23:09,277 - app.pipeline.query_pipeline - INFO -[query]- Hybrid retrieval finished. Using top 0 fused results.
+2026-04-24 03:23:11,132 - app.pipeline.query_pipeline - INFO -[query]- Answer: I'm sorry, but I need more context to provide an answer. "Holy Cross" could refer to a variety of things such as a religious symbol, a school, or a place. Could you provide more details or specify where the term "Holy Cross" is being used?...
+2026-04-24 03:23:43,917 - app.pipeline.query_pipeline - INFO -[query]- Received question: why is anna university used here
+2026-04-24 03:23:44,604 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 0 results for query
+2026-04-24 03:23:44,604 - app.retrieval.rrf_fusion - INFO -[retrieval]- Fused 0 dense and 0 sparse results into 0 top hits
+2026-04-24 03:23:44,605 - app.pipeline.query_pipeline - INFO -[query]- Hybrid retrieval finished. Using top 0 fused results.
+2026-04-24 03:23:46,654 - app.pipeline.query_pipeline - INFO -[query]- Answer: I'm sorry, the context you've provided does not include information about the use of Anna University. If you can provide more details or context around where "Anna University" is mentioned, I would be happy to try to help!...
+2026-04-24 03:24:51,767 - app.pipeline.ingest_pipeline - INFO -[ingestion]- Starting ingestion for Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 03:24:51,769 - app.ingestion.manager - INFO -[ingestion]- Starting ingestion for Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 03:24:52,048 - app.ingestion.manager - INFO -[ingestion]- Successfully processed Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 03:24:52,049 - app.pipeline.ingest_pipeline - INFO -[chunking]- Chunked 1 chunks from Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 03:24:53,734 - app.ingestion.embedder - INFO -[embedding]- Embedded 1 chunks in 1685ms
+2026-04-24 03:24:55,444 - app.vectorstore.pineconestore - INFO -[vectorstore]- Upserted 1 vectors to Pinecone
+2026-04-24 03:24:55,444 - app.pipeline.ingest_pipeline - INFO -[vectorstore]- Uploaded 1 vectors to Pinecone
+2026-04-24 03:24:55,447 - app.retrieval.bm25_retriever - INFO -[retrieval]- Rebuilt BM25 index. Total documents: 1
+2026-04-24 03:25:55,149 - app.pipeline.query_pipeline - INFO -[query]- Received question: why is Rajas institute used
+2026-04-24 03:25:57,318 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 1 results for query
+2026-04-24 03:25:57,319 - app.retrieval.rrf_fusion - INFO -[retrieval]- Fused 1 dense and 0 sparse results into 1 top hits
+2026-04-24 03:25:57,319 - app.pipeline.query_pipeline - INFO -[query]- Hybrid retrieval finished. Using top 1 fused results.
+2026-04-24 03:25:59,378 - app.pipeline.query_pipeline - INFO -[query]- Answer: The Rajas International Institute of Technology is mentioned as the institution where K. Surya completed both their M.E. and B.E. in Computer Science....
+2026-04-24 03:27:07,958 - app.pipeline.query_pipeline - INFO -[query]- Received question: what are the projects she worked for
+2026-04-24 03:27:10,495 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 1 results for query
+2026-04-24 03:27:10,496 - app.retrieval.rrf_fusion - INFO -[retrieval]- Fused 1 dense and 0 sparse results into 1 top hits
+2026-04-24 03:27:10,496 - app.pipeline.query_pipeline - INFO -[query]- Hybrid retrieval finished. Using top 1 fused results.
+2026-04-24 03:27:13,795 - app.pipeline.query_pipeline - INFO -[query]- Answer: K. Surya worked on two signature projects:
+
+1. **NexusChat — Autonomous Agentic NL2SQL Engine**
+   - Designed a 6-stage agentic pipeline for natural-language-to-SQL translation with critic–refinement loops.
+   - Built semantic schema mapping using embeddings.
+   - Engineered a Docker-based execution...
