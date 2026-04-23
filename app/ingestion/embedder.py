@@ -25,4 +25,9 @@ class Embedder:
                 embedded_chunks.append(chunk)
         return embedded_chunks
 
-    
+    def embed_query(self, text: str) -> list[float]:
+        response = self.client.embeddings.create(
+            model=self.model,
+            input=[text]
+        )
+        return response.data[0].embedding
