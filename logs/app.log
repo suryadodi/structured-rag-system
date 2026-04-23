@@ -82,3 +82,40 @@
    - Designed a 6-stage agentic pipeline for natural-language-to-SQL translation with critic–refinement loops.
    - Built semantic schema mapping using embeddings.
    - Engineered a Docker-based execution...
+2026-04-24 03:39:00,334 - app.pipeline.query_pipeline - INFO -[query]- Received question: give the contact information of this
+2026-04-24 03:39:03,124 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 1 results for query
+2026-04-24 03:39:03,125 - app.retrieval.rrf_fusion - INFO -[retrieval]- Fused 1 dense and 0 sparse results into 1 top hits
+2026-04-24 03:39:03,125 - app.pipeline.query_pipeline - INFO -[query]- Hybrid retrieval finished. Using top 1 fused results.
+2026-04-24 03:39:04,658 - app.pipeline.query_pipeline - INFO -[query]- Answer: Phone: 6380614340  
+Email: ksuryaj1892@gmail.com  
+LinkedIn: www.linkedin.com/in/surya-ai-productengineer...
+2026-04-24 03:43:16,125 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:43:16,897 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:43:26,181 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:43:26,997 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:43:31,702 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:43:33,012 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:44:09,120 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:44:10,606 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:44:12,562 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:44:13,388 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:44:23,150 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 03:44:24,566 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 04:14:04,529 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 04:14:05,654 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 04:15:25,213 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 04:15:26,466 - app.retrieval.bm25_retriever - INFO -[retrieval]- Loaded BM25 index with 1 documents
+2026-04-24 04:16:24,187 - app.pipeline.ingest_pipeline - INFO -[ingestion]- Starting ingestion for GENAI.pdf
+2026-04-24 04:16:24,190 - app.ingestion.manager - INFO -[ingestion]- Starting ingestion for GENAI.pdf
+2026-04-24 04:16:24,372 - app.ingestion.manager - INFO -[ingestion]- Successfully processed GENAI.pdf
+2026-04-24 04:16:24,372 - app.pipeline.ingest_pipeline - INFO -[chunking]- Chunked 1 chunks from GENAI.pdf
+2026-04-24 04:16:26,558 - app.ingestion.embedder - INFO -[embedding]- Embedded 1 chunks in 2185ms
+2026-04-24 04:16:28,195 - app.vectorstore.pineconestore - INFO -[vectorstore]- Upserted 1 vectors to Pinecone
+2026-04-24 04:16:28,195 - app.pipeline.ingest_pipeline - INFO -[vectorstore]- Uploaded 1 vectors to Pinecone
+2026-04-24 04:16:28,198 - app.retrieval.bm25_retriever - INFO -[retrieval]- Rebuilt BM25 index. Total documents: 2
+2026-04-24 04:17:11,937 - app.pipeline.query_pipeline - INFO -[query]- Received question: give me the short description of it
+2026-04-24 04:17:13,840 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 2 results for query
+2026-04-24 04:17:13,841 - app.retrieval.rrf_fusion - INFO -[retrieval]- Fused 2 dense and 0 sparse results into 2 top hits
+2026-04-24 04:17:14,059 - app.retrieval.reranker - INFO -[retrieval]- Reranked 2 documents into 2 final results
+2026-04-24 04:17:14,059 - app.pipeline.query_pipeline - INFO -[query]- Hybrid retrieval and reranking finished. Using top 2 chunks.
+2026-04-24 04:17:17,619 - app.pipeline.query_pipeline - INFO -[query]- Answer: I have two documents related to Generative AI and AI engineering. The first one is a "1-Month Comprehensive GenAI Roadmap" which outlines a detailed plan to understand and build Generative AI systems using LLMs, RAG, vector databases, and other tools over a period of 30 days. It covers foundational ...

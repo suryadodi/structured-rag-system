@@ -1,8 +1,10 @@
 from openai import OpenAI
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 from app.vectorstore.pineconestore import PineconeStore
 from app.ingestion.embedder import Embedder
 from app.retrieval.bm25_retriever import BM25Retriever
 from app.retrieval.rrf_fusion import RRFFusion
+from app.retrieval.reranker import DocumentReranker
 from app.utils.logger import get_structured_logger
 from app.config.settings import app_settings
 
@@ -15,6 +17,7 @@ class QueryPipeline:
         self.client = OpenAI(api_key=app_settings.OPENAI_API_KEY)
         self.bm25 = BM25Retriever()
         self.rrf = RRFFusion()
+        self.reranker = DocumentReranker()
 
     def query(self, question: str):
         # Step 1: Log the incoming question
@@ -31,10 +34,13 @@ class QueryPipeline:
         bm25_results = self.bm25.search(question, top_k=10)
         
         # Step 4: Fusion using RRF
-        results = self.rrf.fuse(vector_results, bm25_results, top_n=app_settings.TOP_K)
-        logger.info(f"Hybrid retrieval finished. Using top {len(results)} fused results.", extra={"step": "query"})
+        fused_results = self.rrf.fuse(vector_results, bm25_results, top_n=20)
+        
+        # Step 5: Advanced Reranking
+        results = self.reranker.rerank(question, fused_results, top_n=app_settings.TOP_K)
+        logger.info(f"Hybrid retrieval and reranking finished. Using top {len(results)} chunks.", extra={"step": "query"})
 
-        # Step 5: Build context from the fused results
+        # Step 6: Build context from the final reranked results
         context_parts = []
         for r in results:
             source = r["metadata"].get("source", "unknown")
@@ -43,13 +49,7 @@ class QueryPipeline:
         context = "\n\n".join(context_parts)
 
         # Step 6: Send context + question to GPT-4o and get the answer
-        response = self.client.chat.completions.create(
-            model=app_settings.LLM_MODEL,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant. Answer using only the context provided. Do not make up information."},
-                {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
-            ]
-        )
+        response = self._generate_answer_with_retry(context, question)
         answer = response.choices[0].message.content
         logger.info(f"Answer: {answer[:300]}...", extra={"step": "query"})
 
@@ -58,4 +58,15 @@ class QueryPipeline:
             "answer": answer,
             "sources": list(set([r["metadata"].get("source") for r in results]))
         }
+
+    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
+    def _generate_answer_with_retry(self, context: str, question: str):
+        """Internal method to handle LLM generation with automatic retries."""
+        return self.client.chat.completions.create(
+            model=app_settings.LLM_MODEL,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant. Answer using only the context provided. Do not make up information."},
+                {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
+            ]
+        )
 

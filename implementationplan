@@ -1,41 +1,34 @@
-# Production RAG Pipeline: Implementation Plan
+# RAG Project Dev Log and Roadmap
 
-## Phase 1 — Project Setup & Observability Foundation
-* Stand up a clean Python virtual environment with pinned dependencies (`openai`, `pinecone-client`, `PyMuPDF`, `pdfplumber`, `rank_bm25`, `tenacity`, `pydantic-settings`, `fastapi`, `uvicorn`, `pytest`). 
-* Manage all runtime config through environment variables — OpenAI key, Pinecone config, model names, chunk size, overlap, embedding batch size, top-k — using `pydantic-settings` for validation on startup.
-* Implement structured logging from day one: every log entry carries `run_id`, `step`, `status`, `duration_ms`, and a metadata dict. Add log rotation so the service stays healthy under sustained load. 
+This is the internal tracking for the build. It covers the logic behind the ingestion, the retrieval fusion, and the generation resilience.
 
-## Phase 2 — Ingestion & Document Parsing (The Reader)
-* **Deduplication:** Track every ingested file in a SQLite registry keyed on **file hash**. Reject re-uploads of already-processed documents cleanly via the API.
-* **Extraction:** Use `PyMuPDF` as the primary extractor (superior layout and image handling), with `pdfplumber` as an automatic fallback on parse failure.
-* **Normalisation:** Before any chunking, run a cleaning pass — strip headers and footers, repair broken hyphenated lines, normalise Unicode encoding.
-* **Table Handling:** Tables get stored twice — once as raw structured output (for precise factual retrieval) and once as an LLM-generated prose summary (for semantic search).
-* **Multimodal Extraction (Visuals):** To properly filter and handle images, graphs, and diagrams, you must add an explicit multimodal extraction step. 
-    * **Image/Graph Captions:** When `PyMuPDF` extracts an image, chart, or diagram, pass the visual file to a Multimodal LLM (like `gpt-4o`) to generate a highly detailed textual summary of the visual's contents.
-* **Chunking:** Structure-aware chunking that respects paragraph and section boundaries, with configurable overlap to avoid losing context at chunk edges.
+## Phase 1: Setup and Observability (Done)
+*   Initialized the environment with pinned dependencies (pinecone, openai, fastapi, etc.).
+*   Configuration: Used pydantic-settings to validate the OpenAI and Pinecone keys on startup.
+*   Logging: Implemented structured logging from day one. Every log carries a step ID and duration_ms to track system latency.
 
-## Phase 3 — Embedding & Vector Storage (The Memory)
-* **Vector Store:** Use **Pinecone** as the persistent vector store. Persist index configuration across restarts via environment-scoped index names.
-* **Metadata Schema:** Enforce a strict metadata schema on every stored chunk:
-  `{ "source": "report.pdf", "page": 4, "type": "paragraph|table|image", "chunk_id": "uuid" }`
-* **Storage of Visuals:** Embed and store the text summaries generated in Phase 2 for images/graphs in Pinecone, tagged with `"type": "image"`, so visual data becomes semantically searchable.
-* **Batching:** Generate embeddings in batches capped at 100 items per call. Log embedding latency per batch.
+## Phase 2: Ingestion and Parsing (Done)
+*   Deduplication: Built a SQLite registry using file hashing. We ignore files that have already been processed to save on API costs.
+*   Extraction: Multi-pass extraction. We use PyMuPDF for layout and fallback to pdfplumber on failure.
+*   Tables and Visuals: Tables are stored as raw text but also summarized by GPT-4o for better semantic search. Visuals (images/graphs) are also summarized by GPT-4o so the AI "knows" what is in the diagrams.
+*   Chunking: Structure-aware chunking that respects paragraph boundaries with a 200-character overlap.
 
-## Phase 4 — Hybrid Retrieval & Reranking (The Finder)
-* **Dense Retrieval:** Pinecone vector similarity search — fast semantic recall.
-* **Sparse Retrieval:** BM25 over the same corpus for exact keyword and phrase matching.
-* **Fusion:** Merge both result sets using **Reciprocal Rank Fusion (RRF)**. RRF is robust to score-scale differences—no manual weight tuning required.
-* **Reranking:** Pass the fused top-n results through a cross-encoder (HuggingFace or Cohere Rerank API) to produce a final ranked list. Log pre- and post-rerank scores.
+## Phase 3: Embedding and Storage (Done)
+*   Vector Store: Pinecone is used for long-term memory.
+*   Metadata: We enforce a strict schema on every chunk including source filename and chunk type (paragraph, table, or image).
+*   Batching: Embeddings are requested in batches of 100 to stay under rate limits and optimize speed.
 
-## Phase 5 — Generation & Citations (The Speaker)
-* **FastAPI Layer:** Expose everything as a documented REST API — `/ingest` (accepts PDF upload), `/query` (accepts question, returns structured answer), `/eval` (triggers an evaluation run).
-* **Context Assembly:** Order retrieved chunks either by rerank score or by original document order. Enforce a hard token budget and clear truncation strategy.
-* **Structured Output:** Use OpenAI Function Calling to guarantee the response always returns a typed schema (answer, citations, confidence).
-* **Resilience:** Wrap generation in `tenacity` retry logic. On malformed output, retry with a stricter prompt before falling back to a graceful degraded response.
+## Phase 4: Hybrid retrieval and Reranking (Done)
+*   Dense Retrieval: Standard vector search via Pinecone.
+*   Sparse Retrieval: A local BM25 index handles exact keyword matching.
+*   Fusion (RRF): We merge results using Reciprocal Rank Fusion (k=60), which is the industry standard for combining search lists without manual weighting.
+*   Reranking: Top candidates are passed through Flashrank (a local cross-encoder) to arrive at the final ranked list.
 
-## Phase 6 — Monitoring & Evaluation (The Watcher)
-* **Observability:** After every query, write a structured run record to **Google Sheets**: `RunID | Step | Status | Latency | TopK | RerankerScore | Answer | Timestamp`.
-* **Evaluation — Two Separate Loops:**
-    1. **Retrieval Eval:** Measure `recall@k` and `MRR` against a labelled question set. 
-    2. **Generation Eval:** Measure `faithfulness` and `answer relevance` using an LLM-as-judge pattern.
-* **Closed-Loop Improvement:** Use logged run data to identify low-scoring queries and replay them with modified chunking parameters or adjusted top-k to iterate systematically.
+## Phase 5: API and Generation (Done)
+*   FastAPI: Built endpoints for /ingest, /query, and /clear.
+*   Context Assembly: Chunks are ordered by rerank score. We include the source citations in the output.
+*   Resilience: Wrapped every OpenAI call in Tenacity retries with exponential backoff.
+
+## Phase 6: Monitoring and Eval (Pending)
+*   Retrieval Eval: Plan to measure recall@k and MRR.
+*   Generation Eval: Faithfulness and relevance metrics using an LLM-as-judge loop.
