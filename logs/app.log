@@ -1,0 +1,31 @@
+2026-04-24 00:36:52,783 - app.pipeline.ingest_pipeline - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:36:52,786 - app.ingestion.manager - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:38:23,835 - app.ingestion.manager - INFO -[ingestion]- Successfully processed 2506.00773v2.pdf
+2026-04-24 00:38:23,836 - app.pipeline.ingest_pipeline - INFO -[chunking]- Chunked 37 chunks from 2506.00773v2.pdf
+2026-04-24 00:41:16,273 - app.pipeline.ingest_pipeline - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:41:16,276 - app.ingestion.manager - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:42:40,300 - app.ingestion.manager - INFO -[ingestion]- Successfully processed 2506.00773v2.pdf
+2026-04-24 00:42:40,302 - app.pipeline.ingest_pipeline - INFO -[chunking]- Chunked 37 chunks from 2506.00773v2.pdf
+2026-04-24 00:42:42,278 - app.ingestion.embedder - INFO -[embedding]- Embedded 37 chunks in 1976ms
+2026-04-24 00:42:46,819 - app.vectorstore.pineconestore - INFO -[vectorstore]- Upserted 37 vectors to Pinecone
+2026-04-24 00:42:46,819 - app.pipeline.ingest_pipeline - INFO -[vectorstore]- Uploaded 37 vectors to Pinecone
+2026-04-24 00:42:48,091 - app.pipeline.query_pipeline - INFO -[query]- Received question: What is this paper about?
+2026-04-24 00:42:50,176 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 5 results for query
+2026-04-24 00:42:50,176 - app.pipeline.query_pipeline - INFO -[query]- Found 5 relevant chunks
+2026-04-24 00:42:51,609 - app.pipeline.query_pipeline - INFO -[query]- Answer generated successfully
+2026-04-24 00:46:14,021 - app.pipeline.ingest_pipeline - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:46:14,023 - app.ingestion.manager - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:47:27,993 - app.ingestion.manager - INFO -[ingestion]- Successfully processed 2506.00773v2.pdf
+2026-04-24 00:47:27,995 - app.pipeline.ingest_pipeline - INFO -[chunking]- Chunked 37 chunks from 2506.00773v2.pdf
+2026-04-24 00:47:29,343 - app.ingestion.embedder - INFO -[embedding]- Embedded 37 chunks in 1347ms
+2026-04-24 00:48:58,067 - app.pipeline.ingest_pipeline - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:48:58,070 - app.ingestion.manager - INFO -[ingestion]- Starting ingestion for 2506.00773v2.pdf
+2026-04-24 00:50:15,911 - app.ingestion.manager - INFO -[ingestion]- Successfully processed 2506.00773v2.pdf
+2026-04-24 00:50:15,912 - app.pipeline.ingest_pipeline - INFO -[chunking]- Chunked 37 chunks from 2506.00773v2.pdf
+2026-04-24 00:50:16,928 - app.ingestion.embedder - INFO -[embedding]- Embedded 37 chunks in 1016ms
+2026-04-24 00:50:20,109 - app.vectorstore.pineconestore - INFO -[vectorstore]- Upserted 37 vectors to Pinecone
+2026-04-24 00:50:20,109 - app.pipeline.ingest_pipeline - INFO -[vectorstore]- Uploaded 37 vectors to Pinecone
+2026-04-24 00:50:21,520 - app.pipeline.query_pipeline - INFO -[query]- Received question: What is this paper about?
+2026-04-24 00:50:23,402 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 5 results for query
+2026-04-24 00:50:23,402 - app.pipeline.query_pipeline - INFO -[query]- Found 5 relevant chunks
+2026-04-24 00:50:25,651 - app.pipeline.query_pipeline - INFO -[query]- Answer generated successfully

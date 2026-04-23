@@ -14,7 +14,7 @@ class Embedder:
         embedded_chunks = []
         for batch_start in range(0,len(chunks),self.batch_size):
             batch = chunks[batch_start:batch_start+self.batch_size]
-            texts = [chunk["content"] for chunk in batch]
+            texts = [chunk["content"][:30000] for chunk in batch]
             start_time  = time.time()
             response=self.client.embeddings.create(model=self.model,input=texts)
             duration_ms = round((time.time()-start_time)*1000)

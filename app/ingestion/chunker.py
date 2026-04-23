@@ -43,7 +43,8 @@ class TextChunker:
                     "metadata": {
                         "source": filename,
                         "type": "paragraph",
-                        "chunk_id": chunk_id
+                        "chunk_id": chunk_id,
+                        "content": piece[:20000]
                     }
                 })
         
@@ -57,7 +58,8 @@ class TextChunker:
                     "source": filename,
                     "page": table["metadata"].get("page"),
                     "type": "table",
-                    "chunk_id": chunk_id
+                    "chunk_id": chunk_id,
+                    "content": table["content"][:20000]
                 }
             })
             
@@ -70,7 +72,8 @@ class TextChunker:
                     "source": filename,
                     "page": image["metadata"].get("page"),
                     "type": "image",
-                    "chunk_id": chunk_id
+                    "chunk_id": chunk_id,
+                    "content": image["content"][:20000]
                 }
             })
         return all_chunks

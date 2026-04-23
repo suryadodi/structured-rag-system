@@ -11,7 +11,7 @@ def get_logger(name:str):
 
     if not logger.handlers:
         formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s -[%(steps)s]- %(message)s"
+            "%(asctime)s - %(name)s - %(levelname)s -[%(step)s]- %(message)s"
         )
 
 #Driver -1 Terminal Handler
@@ -37,8 +37,6 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         kwargs['extra'] = extra
         return msg, kwargs
 
-    def get_structured_logger(name:str):
-        logger = get_logger(name)
-        return CustomLoggerAdapter(logger,{})
-    
-     
+def get_structured_logger(name: str):
+    logger = get_logger(name)
+    return CustomLoggerAdapter(logger, {})

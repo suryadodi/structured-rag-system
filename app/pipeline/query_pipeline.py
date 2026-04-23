@@ -40,7 +40,7 @@ class QueryPipeline:
             ]
         )
         answer = response.choices[0].message.content
-        logger.info("Answer generated successfully", extra={"step": "query"})
+        logger.info(f"Answer: {answer[:300]}...", extra={"step": "query"})
 
         # Step 6: Return the answer + which files it came from (citations)
         return {
