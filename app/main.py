@@ -48,3 +48,13 @@ async def ingest(file: UploadFile = File(...)):
 @app.post("/query")
 async def query(request: QueryRequest):
     return query_pipeline.query(request.question)
+
+@app.delete("/clear")
+async def clear():
+    # Delete all vectors from Pinecone
+    ingest_pipeline.vectorstore.index.delete(delete_all=True)
+    
+    if os.path.exists("document_registry.db"):
+        os.remove("document_registry.db")
+    logger.info("Cleared all vectors and reset registry", extra={"step": "system"})
+    return {"status": "success", "message": "All vectors deleted and registry reset"}
