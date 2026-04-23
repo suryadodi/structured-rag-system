@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     EMBEDDING_BATCH_SIZE: int = 100
     TOP_K: int = 5
     MAX_TOKENS: int = 500
+    MAX_FILE_SIZE_MB: int = 50
     
 #Model Names
     EMBEDDING_MODEL:str = "text-embedding-3-small"

@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from app.pipeline.ingest_pipeline import IngestionPipeline
 from app.pipeline.query_pipeline import QueryPipeline
 from app.utils.logger import get_structured_logger
+from app.config.settings import app_settings
 
 logger = get_structured_logger(__name__)
 
@@ -26,9 +27,20 @@ class QueryRequest(BaseModel):
 
 @app.post("/ingest")
 async def ingest(file: UploadFile = File(...)):
+    # Check file type — only PDFs allowed
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are accepted.")
+
+    # Read file content to check size
+    content = await file.read()
+    max_bytes = app_settings.MAX_FILE_SIZE_MB * 1024 * 1024
+    if len(content) > max_bytes:
+        raise HTTPException(status_code=400, detail=f"File too large. Max size is {app_settings.MAX_FILE_SIZE_MB}MB.")
+
+    # Save to temp file and process
     temp_path = f"/tmp/{file.filename}"
     with open(temp_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        buffer.write(content)
     result = ingest_pipeline.ingest_document(temp_path)
     os.remove(temp_path)
     return result

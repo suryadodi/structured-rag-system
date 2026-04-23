@@ -6,5 +6,6 @@ pytest
 pdfplumber
 fastapi
 uvicorn
+python-multipart
 rank_bm25
 tenacity

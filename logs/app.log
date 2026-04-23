@@ -29,3 +29,19 @@
 2026-04-24 00:50:23,402 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 5 results for query
 2026-04-24 00:50:23,402 - app.pipeline.query_pipeline - INFO -[query]- Found 5 relevant chunks
 2026-04-24 00:50:25,651 - app.pipeline.query_pipeline - INFO -[query]- Answer generated successfully
+2026-04-24 02:54:20,133 - app.pipeline.ingest_pipeline - INFO -[ingestion]- Starting ingestion for Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 02:54:20,135 - app.ingestion.manager - INFO -[ingestion]- Starting ingestion for Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 02:54:20,416 - app.ingestion.manager - INFO -[ingestion]- Successfully processed Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 02:54:20,417 - app.pipeline.ingest_pipeline - INFO -[chunking]- Chunked 1 chunks from Surya_AI_Engineer_Resume.docx.pdf
+2026-04-24 02:54:22,750 - app.ingestion.embedder - INFO -[embedding]- Embedded 1 chunks in 2333ms
+2026-04-24 02:54:24,496 - app.vectorstore.pineconestore - INFO -[vectorstore]- Upserted 1 vectors to Pinecone
+2026-04-24 02:54:24,497 - app.pipeline.ingest_pipeline - INFO -[vectorstore]- Uploaded 1 vectors to Pinecone
+2026-04-24 02:56:51,666 - app.pipeline.query_pipeline - INFO -[query]- Received question: What are Surya's skills?
+2026-04-24 02:56:54,153 - app.vectorstore.pineconestore - INFO -[vectorstore]- Query returned 5 results for query
+2026-04-24 02:56:54,153 - app.pipeline.query_pipeline - INFO -[query]- Found 5 relevant chunks
+2026-04-24 02:56:57,226 - app.pipeline.query_pipeline - INFO -[query]- Answer: Surya's skills include:
+
+- Generative AI
+- Autonomous Agents, Multi-Agent Orchestration, Prompt Engineering, Hallucination Mitigation, RAG Architecture
+- OpenAI API, Anthropic Claude, LangChain, Vector Embeddings, Semantic Search, Context Window Optimisation
+- Vector Databases: ChromaDB, Pinecone, M...
