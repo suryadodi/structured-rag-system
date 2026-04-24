@@ -29,6 +29,4 @@ This is the internal tracking for the build. It covers the logic behind the inge
 *   Context Assembly: Chunks are ordered by rerank score. We include the source citations in the output.
 *   Resilience: Wrapped every OpenAI call in Tenacity retries with exponential backoff.
 
-## Phase 6: Monitoring and Eval (Pending)
-*   Retrieval Eval: Plan to measure recall@k and MRR.
-*   Generation Eval: Faithfulness and relevance metrics using an LLM-as-judge loop.
+

@@ -51,5 +51,5 @@ Go to http://127.0.0.1:8000/docs once the server is running. Here is the workflo
 ## Why this architecture?
 *   Hybrid Retrieval: By combining Pinecone and BM25, we catch both conceptual matches and exact phrase matches. 
 *   RRF Fusion: This is a robust way to merge different rankers without having to manually tune weights.
-*   Cross-Encoder Reranking: This is the "high-fidelity" step. It’s slower than vector search but much more accurate because it reads the question and document together.
-*   Observability: Every stage (ingest, chunk, retrieval, generation) is logged with its duration and status for debugging.
+*   Cross-Encoder Reranking: This is the "high-fidelity" step. It’s much more accurate because it reads the question and document together.
+*   Observability: Every stage (ingest, chunk, retrieval, generation) is logged with its duration and status for debugging. **You can check the `logs/app.log` file to see detailed results, what the pipeline is doing step-by-step, and how fast each stage took!**

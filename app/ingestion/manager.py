@@ -24,8 +24,10 @@ class IngestionManager:
             table_summaries =[]
             for table in raw_tables:
                 summary = self.extractor.table_summary(table['raw'])
+                raw_text = "\n".join([str(row) for row in table['raw']])
+                combined_content = f"Table Data:\n{raw_text}\n\nSummary:\n{summary}"
                 table_summaries.append({
-                    "content":summary,
+                    "content":combined_content,
                     "metadata":{
                         "type":"table",
                         "page":table['page']

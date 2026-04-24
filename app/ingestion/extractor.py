@@ -12,12 +12,21 @@ class PDFExtractor:
 
 #The Text Extractor
     def extract_text(self, filepath:str):
-        doc = fitz.open(filepath)
-        text=""
-        for page in doc:
-            text += page.get_text()
-        doc.close()
-        return text
+        try:
+            doc = fitz.open(filepath)
+            text=""
+            for page in doc:
+                text += page.get_text()
+            doc.close()
+            return text
+        except Exception as e:
+            text = ""
+            with pdfplumber.open(filepath) as pdf:
+                for page in pdf.pages:
+                    page_text = page.extract_text()
+                    if page_text:
+                        text += page_text + "\n"
+            return text
 
 # The Table Extractor
     def extract_tables(self,filepath:str):
